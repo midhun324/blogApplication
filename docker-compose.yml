@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: blog_db
+      POSTGRES_USER: midhun
+      POSTGRES_PASSWORD: midhun
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DEBUG=1
+      - DJANGO_SECRET_KEY=xf4*sa+8fc+38=!vm+=ufk0^4)5z-h9%8+3!j8ml^czk6#q*13
+
+      - DATABASE_URL=postgres://midhun:midhun@db:5432/blog_db
+
+volumes:
+  postgres_data:

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Blog page"/>
+    <meta name="author" content="Your name"/>
+
+    <!-- Webpage Title -->
+    <title>Blog Listing</title>
+
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+          rel="stylesheet"/>
+    <link href="{% static 'css/fontawesome-all.css' %}" rel="stylesheet"/>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"/>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
+
+    <!-- Favicon  -->
+    <link rel="icon" href="images/favicon.png"/>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar fixed-top">
+    <div class="container sm:px-4 lg:px-8 flex flex-wrap items-center justify-between lg:flex-nowrap">
+        <!-- Logo -->
+        <a class="inline-block mr-4 py-0.5 text-xl whitespace-nowrap" href="#">
+            <img src="{% static 'images/logo.svg' %}" alt="Logo" class="h-8"/>
+        </a>
+
+        <!-- Navigation Links -->
+        <ul class="pl-0 mt-3 mb-2 ml-auto flex flex-col list-none lg:flex-row">
+            <!-- Home Link -->
+            <li><a class="nav-link page-scroll" href="{% url 'homepage' %}">Home</a></li>
+
+            <!-- Blog Posts Link -->
+            <li><a class="nav-link page-scroll" href="{% url 'BlogPage' %}">Blog Posts</a></li>
+
+            <!-- User Profile and Authentication Links -->
+            {% if user.is_authenticated %}
+            <!-- Show profile name and dropdown menu if logged in -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    {{ user.first_name }} {{ user.last_name }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <a class="dropdown-item" href="{% url 'profile' user.pk %}">Profile</a>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                </div>
+            </li>
+            {% else %}
+            <!-- Show login link if not logged in -->
+            <li><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+
+<!-- Blog Posts Section -->
+<div class="py-24">
+    <div class="container px-4 sm:px-8">
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {% for blog in page_obj %}
+            <div class="border p-6 rounded-lg shadow-md bg-white">
+                {% if blog.image %}
+                <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full h-48 object-cover mb-4">  <!-- Blog Image -->
+                {% endif %}
+                <h2 class="text-2xl font-bold mb-4">{{ blog.title }}</h2>
+                <p class="text-gray-700">{{ blog.content|truncatewords:30 }}</p>
+                <p class="mt-4 text-sm text-gray-500">Author: {{ blog.author.first_name }} {{ blog.author.last_name }}</p>
+                <p class="text-sm text-gray-500">Posted on: {{ blog.created_at|date:"M d, Y" }}</p>
+              <a href="{% url 'blogsinglepage' blog.pk %}" class="text-indigo-600 hover:text-indigo-900">Read more</a>
+
+
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-8">
+            <nav class="flex justify-center">
+                <ul class="inline-flex items-center">
+                    {% if page_obj.has_previous %}
+                    <li>
+                        <a href="?page={{ page_obj.previous_page_number }}"
+                           class="px-4 py-2 text-indigo-600">Previous</a>
+                    </li>
+                    {% endif %}
+
+                    {% for page_num in page_obj.paginator.page_range %}
+                    <li>
+                        <a href="?page={{ page_num }}"
+                           class="{% if page_obj.number == page_num %} font-bold text-white bg-indigo-600 {% else %} text-indigo-600 {% endif %} px-4 py-2 border">{{ page_num }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li>
+                        <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 text-indigo-600">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <div class="container px-4 sm:px-8">
+        <h4 class="mb-8 lg:max-w-3xl lg:mx-auto">Stay updated with our latest blog posts and insights! For inquiries or collaboration, reach out to us at <a class="text-indigo-600 hover:text-gray-500" href="mailto:email@domain.com">email@domain.com</a></h4>
+        <div class="social-container">
+            <span class="fa-stack">
+                <a href="#your-link">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-facebook-f fa-stack-1x"></i>
+                </a>
+            </span>
+            <span class="fa-stack">
+                <a href="#your-link">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x"></i>
+                </a>
+            </span>
+            <span class="fa-stack">
+                <a href="#your-link">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-pinterest-p fa-stack-1x"></i>
+                </a>
+            </span>
+            <span class="fa-stack">
+                <a href="#your-link">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-instagram fa-stack-1x"></i>
+                </a>
+            </span>
+            <span class="fa-stack">
+                <a href="#your-link">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-youtube fa-stack-1x"></i>
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

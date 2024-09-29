@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{{ blog_post.title }} - Read the full article here."/>
+    <meta name="author" content="{{ blog_post.author.first_name }} {{ blog_post.author.last_name }}"/>
+
+    <!-- OG Meta Tags -->
+    <meta property="og:site_name" content="Your Blog Site"/>
+    <meta property="og:title" content="{{ blog_post.title }}"/>
+    <meta property="og:description" content="{{ blog_post.content|truncatewords:30 }}"/>
+    <meta property="og:image" content="{{ blog_post.image.url }}"/>
+    <meta property="og:url" content="{{ request.build_absolute_uri }}"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+
+    <!-- Webpage Title -->
+    <title>{{ blog_post.title }}</title>
+
+    <!-- Styles -->
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+    <link href="{% static 'css/fontawesome-all.css' %}" rel="stylesheet"/>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"/>
+    <link href="{% static 'css/swiper.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/magnific-popup.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet"/>
+
+    <!-- Favicon  -->
+    <link rel="icon" href="{% static 'images/favicon.png' %}"/>
+</head>
+<body data-spy="scroll" data-target=".fixed-top">
+
+<!-- Navigation -->
+<nav class="navbar fixed-top">
+    <div class="container sm:px-4 lg:px-8 flex flex-wrap items-center justify-between lg:flex-nowrap">
+        <!-- Logo -->
+        <a class="inline-block mr-4 py-0.5 text-xl whitespace-nowrap" href="#">
+            <img src="{% static 'images/logo.svg' %}" alt="Logo" class="h-8"/>
+        </a>
+
+        <!-- Navigation Links -->
+        <ul class="pl-0 mt-3 mb-2 ml-auto flex flex-col list-none lg:flex-row">
+            <li><a class="nav-link page-scroll" href="{% url 'homepage' %}">Home</a></li>
+            <li><a class="nav-link page-scroll" href="{% url 'BlogPage' %}">Blog Posts</a></li>
+
+            {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    {{ user.first_name }} {{ user.last_name }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <a class="dropdown-item" href="{% url 'profile' user.pk %}">Profile</a>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                </div>
+            </li>
+            {% else %}
+            <li><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<!-- Blog Post Details -->
+<div class="py-24">
+    <div class="container px-4 sm:px-8 lg:grid lg:grid-cols-12 lg:gap-x-12">
+        <!-- Blog Post Image -->
+        <div class="lg:col-span-12 mb-12">
+            {% if blog_post.image %}
+                <img src="{{ blog_post.image.url }}" alt="{{ blog_post.title }}" class="w-full" style="width:550px"/>
+            {% endif %}
+        </div>
+
+        <!-- Blog Post Content -->
+        <div class="lg:col-span-12">
+            <h2 class="mb-6 text-2xl font-bold">{{ blog_post.title }}</h2>
+            <p class="text-gray-600 mb-4">By {{ blog_post.author.first_name }} {{ blog_post.author.last_name }} on {{ blog_post.date_posted|date:"M d, Y" }}</p>
+            <div class="mb-6">
+                <p>{{ blog_post.content }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer -->
+<div class="footer">
+    <div class="container px-4 sm:px-8">
+        <h4 class="mb-8 lg:max-w-3xl lg:mx-auto">Stay updated with our latest blog posts and insights! For inquiries or collaboration, reach out to us at <a class="text-indigo-600 hover:text-gray-500" href="mailto:email@domain.com">email@domain.com</a></h4>
+        <div class="social-container">
+            <span class="fa-stack">
+                <a href="#your-link">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-facebook-f fa-stack-1x"></i>
+                </a>
+            </span>
+            <span class="fa-stack">
+                <a href="#your-link">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x"></i>
+                </a>
+            </span>
+            <span class="fa-stack">
+                <a href="#your-link">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-pinterest-p fa-stack-1x"></i>
+                </a>
+            </span>
+            <span class="fa-stack">
+                <a href="#your-link">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-instagram fa-stack-1x"></i>
+                </a>
+            </span>
+            <span class="fa-stack">
+                <a href="#your-link">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-youtube fa-stack-1x"></i>
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Copyright -->
+<div class="copyright">
+    <div class="container px-4 sm:px-8 lg:grid lg:grid-cols-3">
+        <ul class="mb-4 list-unstyled p-small">
+            <li class="mb-2"><a href="article.html">Article Details</a></li>
+            <li class="mb-2"><a href="terms.html">Terms & Conditions</a></li>
+            <li class="mb-2"><a href="privacy.html">Privacy Policy</a></li>
+        </ul>
+        <p class="text-center text-sm text-gray-400">&copy; 2024 Your Name</p>
+        <div class="social-container">
+            <a href="#your-link" class="mx-2"><i class="fab fa-facebook-f"></i></a>
+            <a href="#your-link" class="mx-2"><i class="fab fa-twitter"></i></a>
+            <a href="#your-link" class="mx-2"><i class="fab fa-pinterest-p"></i></a>
+            <a href="#your-link" class="mx-2"><i class="fab fa-instagram"></i></a>
+            <a href="#your-link" class="mx-2"><i class="fab fa-youtube"></i></a>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/swiper.min.js' %}"></script>
+<script src="{% static 'js/jquery.magnific-popup.js' %}"></script>
+<script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>
